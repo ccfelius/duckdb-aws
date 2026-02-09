@@ -29,6 +29,12 @@ jobs:
           fetch-depth: 0
           submodules: 'true'
 
+      - name: Checkout DuckDB to version
+        if: ${{ matrix.duckdb_version != '<submodule_version>'}}
+        run: |
+          cd duckdb
+          git checkout ${{ matrix.duckdb_version }}
+
       - name: Checkout duckdb-httpfs
         uses: actions/checkout@v4
         with:
@@ -68,7 +74,7 @@ jobs:
           sudo ./scripts/install_s3_test_server.sh
           ./scripts/generate_presigned_url.sh
           source ./scripts/run_s3_test_server.sh
-          source ./scripts/set_s3_test_server_variables.sh
+          source scripts/set_s3_test_server_variables.sh
           sleep 30
 
       - name: Write AWS credentials file
