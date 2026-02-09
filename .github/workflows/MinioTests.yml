@@ -62,7 +62,7 @@ jobs:
         shell: bash
         run: |
           cd duckdb
-          mkdir data/attach_test
+          mkdir -p data/attach_test
           touch data/attach_test/attach.db
           sudo ./scripts/install_s3_test_server.sh
           source ./scripts/run_s3_test_server.sh
