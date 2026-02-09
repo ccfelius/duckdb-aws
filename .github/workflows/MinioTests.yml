@@ -34,6 +34,10 @@ jobs:
         run: |
           cd duckdb
           git checkout ${{ matrix.duckdb_version }}
+          mkdir -p build/release
+          cd build/release
+          cmake ../..
+          make -j$(nproc)
 
       - name: Checkout duckdb-httpfs
         uses: actions/checkout@v4
@@ -71,6 +75,7 @@ jobs:
           cd duckdb-httpfs
           mkdir data/attach_test
           touch data/attach_test/attach.db
+          export DUCKDB_PATH=$GITHUB_WORKSPACE/duckdb/build/release/duckdb
           sudo ./scripts/install_s3_test_server.sh
           ./scripts/generate_presigned_url.sh
           source ./scripts/run_s3_test_server.sh
