@@ -34,17 +34,6 @@ jobs:
         run: |
           cd duckdb
           git checkout ${{ matrix.duckdb_version }}
-          mkdir -p build/release
-          cd build/release
-          cmake ../..
-          make -j$(nproc)
-
-      - name: Checkout duckdb-httpfs
-        uses: actions/checkout@v4
-        with:
-          repository: duckdb/duckdb-httpfs
-          path: duckdb-httpfs
-          ref: c5a73542cfa9d4b2be73670e5ff0ab973f7a9b27
 
       - uses: actions/setup-python@v4
         with:
@@ -72,15 +61,7 @@ jobs:
       - name: Start S3/HTTP test server
         shell: bash
         run: |
-          cd duckdb-httpfs
-          mkdir data/attach_test
-          touch data/attach_test/attach.db
-          export DUCKDB_PATH=$GITHUB_WORKSPACE/duckdb/build/release/duckdb
-          sudo ./scripts/install_s3_test_server.sh
-          ./scripts/generate_presigned_url.sh
-          source ./scripts/run_s3_test_server.sh
-          source scripts/set_s3_test_server_variables.sh
-          sleep 30
+          ./scripts/install_and_run_httpfs_s3_test_server.sh
 
       - name: Write AWS credentials file
         shell: bash
